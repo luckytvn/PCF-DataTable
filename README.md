@@ -1,9 +1,11 @@
 🎯 Overview
+
 The Advanced DataTable PCF Control transforms the default Power Apps grid experience into a powerful, user-friendly data management interface. Unlike standard grids, this control automatically loads all available records, provides instant client-side filtering and sorting, and offers a polished, modern UI that works seamlessly across all Power Apps environments.
 
 ✨ Key Features:
 
 🚀 Auto-Load All Records
+
 Automatically loads all available records in the background (no pagination limits)
 Shows real-time loading progress
 Handles up to 5,000+ records efficiently
