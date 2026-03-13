@@ -78,19 +78,3 @@ Advanced DataTable is a professional-grade Power Apps Component Framework (PCF) 
 
 ### Mobile Responsive
 ![Mobile](/docs/screenshots/Responsive.png)
-
----
-
-## 🚀 Installation
-
-### Prerequisites
-- Power Apps CLI ([Install Guide](https://docs.microsoft.com/powerapps/developer/data-platform/powerapps-cli))
-- Node.js 16+ ([Download](https://nodejs.org/))
-- Power Apps environment with Dataverse
-
-### Method 1: Import Solution (Recommended)
-
-1. **Download the latest release**
-   ```bash
-   # Download from Releases page
-   wget https://github.com/user-attachments/files/25926404/Solution.zip
