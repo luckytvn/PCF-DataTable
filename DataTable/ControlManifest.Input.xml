@@ -1,77 +1,272 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="lsp" constructor="DataTable" version="1.0.4" 
-           display-name-key="DataTable" 
-           description-key="DataTable" 
+  <control namespace="lsp" constructor="DataTable" version="1.0.6" 
+           display-name-key="DataTable_Display_Key" 
+           description-key="DataTable_Desc_Key" 
            control-type="standard">
     
-    <!-- Dataset Definition -->
-    <data-set name="dataSet" display-name-key="Dataset_Display_Key" cds-data-set-options="displayCommandBar:true;displayViewSelector:true;displayQuickFindSearch:true">
-      <property-set name="samplePropertySet" display-name-key="Property_Display_Key" description-key="Property_Desc_Key" of-type="SingleLine.Text" usage="bound" required="true" />
+    <!-- Dataset -->
+    <data-set name="dataSet" display-name-key="Dataset_Display_Key" 
+              cds-data-set-options="displayCommandBar:true;displayViewSelector:true;displayQuickFindSearch:true">
+      <property-set name="samplePropertySet" display-name-key="Property_Display_Key" 
+                    description-key="Property_Desc_Key" of-type="SingleLine.Text" 
+                    usage="bound" required="false" />
     </data-set>
     
-    <!-- Properties -->
-    <property name="enableSorting" display-name-key="EnableSorting" 
-              description-key="EnableSorting_Desc" 
+    <!-- ============================================
+         Functional Properties
+         ============================================ -->
+    <property name="enableSorting" 
+              display-name-key="EnableSorting_Display_Key"
+              description-key="EnableSorting_Desc_Key"
               of-type="TwoOptions" 
               usage="input" 
               required="false" 
               default-value="true" />
     
-    <property name="enableFiltering" display-name-key="EnableFiltering" 
-              description-key="EnableFiltering_Desc" 
+    <property name="enableFiltering" 
+              display-name-key="EnableFiltering_Display_Key"
+              description-key="EnableFiltering_Desc_Key"
               of-type="TwoOptions" 
               usage="input" 
               required="false" 
               default-value="true" />
     
-    <property name="enablePaging" display-name-key="EnablePaging" 
-              description-key="EnablePaging_Desc" 
+    <property name="enablePaging" 
+              display-name-key="EnablePaging_Display_Key"
+              description-key="EnablePaging_Desc_Key"
               of-type="TwoOptions" 
               usage="input" 
               required="false" 
               default-value="true" />
     
-    <property name="pageSize" display-name-key="PageSize" 
-              description-key="PageSize_Desc" 
+    <property name="pageSize" 
+              display-name-key="PageSize_Display_Key"
+              description-key="PageSize_Desc_Key"
               of-type="Whole.None" 
               usage="input" 
               required="false" 
               default-value="10" />
     
-    <property name="enableSelection" display-name-key="EnableSelection" 
-              description-key="EnableSelection_Desc" 
+    <property name="enableSelection" 
+              display-name-key="EnableSelection_Display_Key"
+              description-key="EnableSelection_Desc_Key"
               of-type="TwoOptions" 
               usage="input" 
               required="false" 
               default-value="true" />
     
-    <property name="enableMultiSelect" display-name-key="EnableMultiSelect" 
-              description-key="EnableMultiSelect_Desc" 
+    <property name="enableMultiSelect" 
+              display-name-key="EnableMultiSelect_Display_Key"
+              description-key="EnableMultiSelect_Desc_Key"
               of-type="TwoOptions" 
               usage="input" 
               required="false" 
               default-value="true" />
     
-    <property name="highlightColor" display-name-key="HighlightColor" 
-              description-key="HighlightColor_Desc" 
+    <property name="hiddenColumns" 
+              display-name-key="HiddenColumns_Display_Key"
+              description-key="HiddenColumns_Desc_Key"
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="false" 
+              default-value="" />
+    
+    <!-- ============================================
+         Color Properties
+         ============================================ -->
+    <property name="highlightColor" 
+              display-name-key="HighlightColor_Display_Key"
+              description-key="HighlightColor_Desc_Key"
               of-type="SingleLine.Text" 
               usage="input" 
               required="false" 
               default-value="#0078d4" />
     
-    <property name="rowHeight" display-name-key="RowHeight" 
-              description-key="RowHeight_Desc" 
+    <property name="headerBackgroundColor" 
+              display-name-key="HeaderBackgroundColor_Display_Key"
+              description-key="HeaderBackgroundColor_Desc_Key"
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="false" 
+              default-value="#f8f9fa" />
+    
+    <property name="headerTextColor" 
+              display-name-key="HeaderTextColor_Display_Key"
+              description-key="HeaderTextColor_Desc_Key"
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="false" 
+              default-value="#333333" />
+    
+    <property name="rowBackgroundColor" 
+              display-name-key="RowBackgroundColor_Display_Key"
+              description-key="RowBackgroundColor_Desc_Key"
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="false" 
+              default-value="#ffffff" />
+    
+    <property name="alternateRowColor" 
+              display-name-key="AlternateRowColor_Display_Key"
+              description-key="AlternateRowColor_Desc_Key"
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="false" 
+              default-value="#fafafa" />
+    
+    <property name="hoverColor" 
+              display-name-key="HoverColor_Display_Key"
+              description-key="HoverColor_Desc_Key"
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="false" 
+              default-value="#f5f5f5" />
+    
+    <property name="selectedRowColor" 
+              display-name-key="SelectedRowColor_Display_Key"
+              description-key="SelectedRowColor_Desc_Key"
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="false" 
+              default-value="#e3f2fd" />
+    
+    <property name="borderColor" 
+              display-name-key="BorderColor_Display_Key"
+              description-key="BorderColor_Desc_Key"
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="false" 
+              default-value="#e0e0e0" />
+    
+    <property name="textColor" 
+              display-name-key="TextColor_Display_Key"
+              description-key="TextColor_Desc_Key"
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="false" 
+              default-value="#333333" />
+    
+    <property name="secondaryTextColor" 
+              display-name-key="SecondaryTextColor_Display_Key"
+              description-key="SecondaryTextColor_Desc_Key"
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="false" 
+              default-value="#666666" />
+    
+    <!-- ============================================
+         Layout & Spacing Properties
+         ============================================ -->
+    <property name="rowHeight" 
+              display-name-key="RowHeight_Display_Key"
+              description-key="RowHeight_Desc_Key"
               of-type="Whole.None" 
               usage="input" 
               required="false" 
               default-value="40" />
     
+    <property name="headerHeight" 
+              display-name-key="HeaderHeight_Display_Key"
+              description-key="HeaderHeight_Desc_Key"
+              of-type="Whole.None" 
+              usage="input" 
+              required="false" 
+              default-value="45" />
+    
+    <property name="borderRadius" 
+              display-name-key="BorderRadius_Display_Key"
+              description-key="BorderRadius_Desc_Key"
+              of-type="Whole.None" 
+              usage="input" 
+              required="false" 
+              default-value="4" />
+    
+    <property name="borderWidth" 
+              display-name-key="BorderWidth_Display_Key"
+              description-key="BorderWidth_Desc_Key"
+              of-type="Whole.None" 
+              usage="input" 
+              required="false" 
+              default-value="1" />
+    
+    <property name="cellPadding" 
+              display-name-key="CellPadding_Display_Key"
+              description-key="CellPadding_Desc_Key"
+              of-type="Whole.None" 
+              usage="input" 
+              required="false" 
+              default-value="12" />
+    
+    <!-- ============================================
+         Typography Properties
+         ============================================ -->
+    <property name="fontSize" 
+              display-name-key="FontSize_Display_Key"
+              description-key="FontSize_Desc_Key"
+              of-type="Whole.None" 
+              usage="input" 
+              required="false" 
+              default-value="14" />
+    
+    <property name="headerFontSize" 
+              display-name-key="HeaderFontSize_Display_Key"
+              description-key="HeaderFontSize_Desc_Key"
+              of-type="Whole.None" 
+              usage="input" 
+              required="false" 
+              default-value="14" />
+    
+    <property name="fontFamily" 
+              display-name-key="FontFamily_Display_Key"
+              description-key="FontFamily_Desc_Key"
+              of-type="SingleLine.Text" 
+              usage="input" 
+              required="false" 
+              default-value="Segoe UI, Arial, sans-serif" />
+    
+    <property name="fontWeight" 
+              display-name-key="FontWeight_Display_Key"
+              description-key="FontWeight_Desc_Key"
+              of-type="Whole.None" 
+              usage="input" 
+              required="false" 
+              default-value="400" />
+    
+    <!-- ============================================
+         Effect Properties
+         ============================================ -->
+    <property name="enableHoverEffect" 
+              display-name-key="EnableHoverEffect_Display_Key"
+              description-key="EnableHoverEffect_Desc_Key"
+              of-type="TwoOptions" 
+              usage="input" 
+              required="false" 
+              default-value="true" />
+    
+    <property name="enableRowStripes" 
+              display-name-key="EnableRowStripes_Display_Key"
+              description-key="EnableRowStripes_Desc_Key"
+              of-type="TwoOptions" 
+              usage="input" 
+              required="false" 
+              default-value="true" />
+    
+    <property name="shadowLevel" 
+              display-name-key="ShadowLevel_Display_Key"
+              description-key="ShadowLevel_Desc_Key"
+              of-type="Whole.None" 
+              usage="input" 
+              required="false" 
+              default-value="1" />
+    
+    <!-- Resources -->
     <resources>
       <code path="index.ts" order="1"/>
       <css path="css/DataTable.css" order="1" />
     </resources>
     
+    <!-- Feature Usage -->
     <feature-usage>
       <uses-feature name="Utility" required="true" />
       <uses-feature name="WebAPI" required="false" />

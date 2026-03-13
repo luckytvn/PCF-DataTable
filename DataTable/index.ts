@@ -33,15 +33,36 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
     private _currentPage = 1;
     private _selectedRecordIds: string[] = [];
     private _isTestHarness = false;
-    private _highlightColor = "#0078d4";
-    private _rowHeight = 40;
     private _searchDebounceTimer: number | null = null;
     
     // Auto-load tracking
     private _lastRecordCount = 0;
-    private _loadingStartTime = 0;
     private _consecutiveLoadAttempts = 0;
-    private _maxLoadAttempts = 100; // Max 100 pages (5000 records if 50 per page)
+    private _maxLoadAttempts = 100;
+    
+    // Style properties
+    private _highlightColor = "#0078d4";
+    private _headerBackgroundColor = "#f8f9fa";
+    private _headerTextColor = "#333333";
+    private _rowBackgroundColor = "#ffffff";
+    private _alternateRowColor = "#fafafa";
+    private _hoverColor = "#f5f5f5";
+    private _selectedRowColor = "#e3f2fd";
+    private _borderColor = "#e0e0e0";
+    private _textColor = "#333333";
+    private _secondaryTextColor = "#666666";
+    private _rowHeight = 40;
+    private _headerHeight = 45;
+    private _borderRadius = 4;
+    private _borderWidth = 1;
+    private _cellPadding = 12;
+    private _fontSize = 14;
+    private _headerFontSize = 14;
+    private _fontFamily = "Segoe UI, Arial, sans-serif";
+    private _fontWeight = 400;
+    private _enableHoverEffect = true;
+    private _enableRowStripes = true;
+    private _shadowLevel = 1;
 
     public init(
         context: ComponentFramework.Context<IInputs>,
@@ -53,22 +74,92 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
         this._notifyOutputChanged = notifyOutputChanged;
         this._container = container;
         
-        this._highlightColor = context.parameters.highlightColor?.raw || "#0078d4";
-        this._rowHeight = context.parameters.rowHeight?.raw || 40;
-        
+        this.loadStyleProperties(context);
         context.mode.trackContainerResize(true);
-        
         this.initializeUI();
         
         console.log("🚀 DataTable PCF initialized");
+    }
+
+    private loadStyleProperties(context: ComponentFramework.Context<IInputs>): void {
+        // Color properties
+        this._highlightColor = context.parameters.highlightColor?.raw || "#0078d4";
+        this._headerBackgroundColor = context.parameters.headerBackgroundColor?.raw || "#f8f9fa";
+        this._headerTextColor = context.parameters.headerTextColor?.raw || "#333333";
+        this._rowBackgroundColor = context.parameters.rowBackgroundColor?.raw || "#ffffff";
+        this._alternateRowColor = context.parameters.alternateRowColor?.raw || "#fafafa";
+        this._hoverColor = context.parameters.hoverColor?.raw || "#f5f5f5";
+        this._selectedRowColor = context.parameters.selectedRowColor?.raw || "#e3f2fd";
+        this._borderColor = context.parameters.borderColor?.raw || "#e0e0e0";
+        this._textColor = context.parameters.textColor?.raw || "#333333";
+        this._secondaryTextColor = context.parameters.secondaryTextColor?.raw || "#666666";
+        
+        // Layout properties
+        this._rowHeight = context.parameters.rowHeight?.raw || 40;
+        this._headerHeight = context.parameters.headerHeight?.raw || 45;
+        this._borderRadius = context.parameters.borderRadius?.raw || 4;
+        this._borderWidth = context.parameters.borderWidth?.raw || 1;
+        this._cellPadding = context.parameters.cellPadding?.raw || 12;
+        
+        // Typography properties
+        this._fontSize = context.parameters.fontSize?.raw || 14;
+        this._headerFontSize = context.parameters.headerFontSize?.raw || 14;
+        this._fontFamily = context.parameters.fontFamily?.raw || "Segoe UI, Arial, sans-serif";
+        this._fontWeight = context.parameters.fontWeight?.raw || 400;
+        
+        // Effect properties
+        this._enableHoverEffect = context.parameters.enableHoverEffect?.raw !== false;
+        this._enableRowStripes = context.parameters.enableRowStripes?.raw !== false;
+        this._shadowLevel = context.parameters.shadowLevel?.raw || 1;
+    }
+
+    private applyCSSVariables(): void {
+        const container = this._container;
+        
+        // Color variables
+        container.style.setProperty('--highlight-color', this._highlightColor);
+        container.style.setProperty('--header-bg', this._headerBackgroundColor);
+        container.style.setProperty('--header-text', this._headerTextColor);
+        container.style.setProperty('--row-bg', this._rowBackgroundColor);
+        container.style.setProperty('--alternate-row-bg', this._alternateRowColor);
+        container.style.setProperty('--hover-bg', this._hoverColor);
+        container.style.setProperty('--selected-bg', this._selectedRowColor);
+        container.style.setProperty('--border-color', this._borderColor);
+        container.style.setProperty('--text-color', this._textColor);
+        container.style.setProperty('--text-muted', this._secondaryTextColor);
+        
+        // Layout variables
+        container.style.setProperty('--row-height', `${this._rowHeight}px`);
+        container.style.setProperty('--header-height', `${this._headerHeight}px`);
+        container.style.setProperty('--border-radius', `${this._borderRadius}px`);
+        container.style.setProperty('--border-width', `${this._borderWidth}px`);
+        container.style.setProperty('--cell-padding', `${this._cellPadding}px`);
+        
+        // Typography variables
+        container.style.setProperty('--font-size', `${this._fontSize}px`);
+        container.style.setProperty('--header-font-size', `${this._headerFontSize}px`);
+        container.style.setProperty('--font-family', this._fontFamily);
+        container.style.setProperty('--font-weight', this._fontWeight.toString());
+        
+        // Effect variables
+        container.style.setProperty('--enable-hover', this._enableHoverEffect ? '1' : '0');
+        container.style.setProperty('--enable-stripes', this._enableRowStripes ? '1' : '0');
+        
+        // Shadow levels
+        const shadows = [
+            'none',
+            '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08)',
+            '0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12)',
+            '0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.10)'
+        ];
+        container.style.setProperty('--box-shadow', shadows[Math.min(this._shadowLevel, 3)]);
     }
 
     private initializeUI(): void {
         this._container.innerHTML = "";
         this._container.className = "pcf-datatable-container";
         
-        this._container.style.setProperty('--highlight-color', this._highlightColor);
-        this._container.style.setProperty('--row-height', `${this._rowHeight}px`);
+        this.applyCSSVariables();
         
         this._searchContainer = document.createElement("div");
         this._searchContainer.className = "pcf-toolbar";
@@ -101,10 +192,9 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
     public updateView(context: ComponentFramework.Context<IInputs>): void {
         this._context = context;
         
-        this._highlightColor = context.parameters.highlightColor?.raw || "#0078d4";
-        this._rowHeight = context.parameters.rowHeight?.raw || 40;
-        this._container.style.setProperty('--highlight-color', this._highlightColor);
-        this._container.style.setProperty('--row-height', `${this._rowHeight}px`);
+        // Reload and apply style properties
+        this.loadStyleProperties(context);
+        this.applyCSSVariables();
         
         if (!context.parameters.dataSet) {
             this.renderError("Dataset not configured", 
@@ -114,25 +204,16 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
         
         const dataSet = context.parameters.dataSet;
         
-        // ============================================
-        // KEY FIX: Kiểm tra loading state
-        // ============================================
         if (dataSet.loading) {
             console.log("⏳ Dataset is loading...");
-            
-            // Show loading indicator
             if (this._lastRecordCount === 0) {
                 this.renderLoading();
             } else {
                 this.showLoadingProgress();
             }
-            
-            return; // STOP HERE - đợi load xong
+            return;
         }
         
-        // ============================================
-        // Data đã load xong
-        // ============================================
         console.group(`📊 UpdateView - Data Loaded`);
         
         // Get columns
@@ -167,52 +248,39 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
         console.log(`🔢 Last count: ${this._lastRecordCount}`);
         console.log(`🔄 Load attempts: ${this._consecutiveLoadAttempts}`);
         
-        // ============================================
-        // AUTO-LOAD LOGIC
-        // ============================================
-        
         // Check if we got new records
         const gotNewRecords = currentRecordCount > this._lastRecordCount;
         
         if (gotNewRecords) {
             console.log(`✅ Got ${currentRecordCount - this._lastRecordCount} new records`);
             this._lastRecordCount = currentRecordCount;
-            this._consecutiveLoadAttempts = 0; // Reset attempts khi có data mới
+            this._consecutiveLoadAttempts = 0;
         }
         
-        // Nếu còn page và chưa vượt quá max attempts
+        // Continue loading if has next page
         if (hasNextPage && this._consecutiveLoadAttempts < this._maxLoadAttempts) {
             this._consecutiveLoadAttempts++;
-            
             console.log(`🔄 Loading next page (attempt ${this._consecutiveLoadAttempts}/${this._maxLoadAttempts})...`);
-            
-            // Show progress
             this.showLoadingProgress();
             
-            // Load next page - QUAN TRỌNG: Phải check paging tồn tại
             if (dataSet.paging && typeof dataSet.paging.loadNextPage === 'function') {
-                // Delay nhỏ để tránh overwhelm server
                 setTimeout(() => {
                     try {
                         dataSet.paging.loadNextPage();
                         console.log("✅ loadNextPage() called successfully");
                     } catch (error) {
                         console.error("❌ Error calling loadNextPage:", error);
-                        this._consecutiveLoadAttempts = this._maxLoadAttempts; // Stop trying
+                        this._consecutiveLoadAttempts = this._maxLoadAttempts;
                     }
-                }, 50); // 50ms delay
+                }, 50);
             } else {
                 console.error("❌ Paging or loadNextPage not available");
                 this._consecutiveLoadAttempts = this._maxLoadAttempts;
             }
             
             console.groupEnd();
-            return; // DON'T render yet, wait for more data
+            return;
         }
-        
-        // ============================================
-        // All data loaded - Render table
-        // ============================================
         
         if (this._consecutiveLoadAttempts >= this._maxLoadAttempts) {
             console.warn(`⚠️ Stopped loading: reached max attempts (${this._maxLoadAttempts})`);
@@ -225,11 +293,8 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
         console.groupEnd();
         
         this._isTestHarness = context.mode.allocatedHeight === -1;
-        
-        // Clear loading indicator
         this._loadMoreContainer.innerHTML = "";
         
-        // Render UI
         if (!this._infoSection) {
             this.renderToolbar();
         } else {
@@ -257,15 +322,6 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
                 <div class="pcf-error-icon">⚠️</div>
                 <div class="pcf-error-message">${message}</div>
                 ${hint ? `<div class="pcf-error-hint">${hint}</div>` : ''}
-                <div class="pcf-error-steps">
-                    <strong>Configuration Steps:</strong>
-                    <ol>
-                        <li>Add control to a Subgrid or View</li>
-                        <li>Ensure the view has columns configured</li>
-                        <li>Bind the control to a data source</li>
-                        <li>Publish customizations</li>
-                    </ol>
-                </div>
             </div>
         `;
     }
@@ -287,7 +343,6 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
         const toolbarContent = document.createElement("div");
         toolbarContent.className = "pcf-toolbar-content";
         
-        // Global search
         const searchWrapper = document.createElement("div");
         searchWrapper.className = "pcf-search-wrapper";
         
@@ -319,7 +374,6 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
         searchWrapper.appendChild(searchInput);
         toolbarContent.appendChild(searchWrapper);
         
-        // Action buttons
         const actionsWrapper = document.createElement("div");
         actionsWrapper.className = "pcf-actions-wrapper";
         actionsWrapper.id = "pcf-actions-wrapper";
@@ -327,7 +381,6 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
         this.renderActionButtons(actionsWrapper);
         toolbarContent.appendChild(actionsWrapper);
         
-        // Info section
         this._infoSection = document.createElement("div");
         this._infoSection.className = "pcf-info-section";
         this.updateInfoSection();
@@ -339,7 +392,6 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
     private renderActionButtons(container: HTMLElement): void {
         container.innerHTML = "";
         
-        // Clear filters
         if (Object.keys(this._filters).length > 0 || this._globalSearch) {
             const clearBtn = document.createElement("button");
             clearBtn.className = "pcf-action-btn";
@@ -360,13 +412,11 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
             container.appendChild(clearBtn);
         }
         
-        // Refresh
         const refreshBtn = document.createElement("button");
         refreshBtn.className = "pcf-action-btn";
         refreshBtn.innerHTML = "🔄 Refresh";
         refreshBtn.addEventListener("click", () => {
             console.log("🔄 User clicked Refresh");
-            // Reset tracking variables
             this._lastRecordCount = 0;
             this._consecutiveLoadAttempts = 0;
             this._context.parameters.dataSet.refresh();
@@ -570,10 +620,11 @@ export class DataTable implements ComponentFramework.StandardControl<IInputs, IO
             return;
         }
         
-        pagedRecords.forEach((record) => {
+        pagedRecords.forEach((record, index) => {
             const row = document.createElement("tr");
             row.className = "pcf-data-row";
             row.setAttribute("data-record-id", record.getRecordId());
+            row.setAttribute("data-row-index", index.toString());
             
             if (this._context.parameters.enableSelection.raw) {
                 const selectTd = document.createElement("td");
