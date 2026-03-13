@@ -68,16 +68,16 @@ Advanced DataTable is a professional-grade Power Apps Component Framework (PCF) 
 ## 📸 Screenshots
 
 ### Default Theme
-![Default Theme](./assets/screenshot-default.png)
+![Default Theme](/docs/screenshots/Default.png)
 
-### Dark Mode
-![Dark Mode](./assets/screenshot-dark.png)
+### Default Theme
+![Multi/Single Selection](/docs/screenshots/Selection.png)
 
 ### Filtering & Search
-![Filtering](./assets/screenshot-filtering.png)
+![Filtering](/docs/screenshots/Filter.png)
 
 ### Mobile Responsive
-![Mobile](./assets/screenshot-mobile.png)
+![Mobile](/docs/screenshots/Responsive.png)
 
 ---
 
@@ -93,4 +93,4 @@ Advanced DataTable is a professional-grade Power Apps Component Framework (PCF) 
 1. **Download the latest release**
    ```bash
    # Download from Releases page
-   wget https://github.com/YourUsername/DataTable-PCF/releases/latest/download/DataTableSolution.zip
+   wget https://github.com/user-attachments/files/25926404/Solution.zip
